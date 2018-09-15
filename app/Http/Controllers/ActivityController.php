@@ -89,19 +89,37 @@ class ActivityController extends Controller
         $halaman = 'submit kegiatan';
 
         $belum = [];
+        $no = 1;
 
         $id_santri  = Auth::user()->id;
         $kegiatan   = \App\Activity::where('id_santri', $id_santri)->get();
 
         foreach ($kegiatan as $keg) {
             $achiev = \App\Achievement::all();
-            $achiev = $achiev->where('id_kegiatan', $keg->id)->where('id_santri', $id_santri)->where('tanggal', date('Y-m-d'));
+            $achiev = $achiev->where('id_activity', $keg->id)->where('id_santri', $id_santri)->where('tanggal', date('Y-m-d'));
 
             if ($achiev->isEmpty()) {
                 array_push($belum, $keg);
             }
         }
 
-        return view('dashboard.submit', compact('halaman', 'belum'));
+        return view('dashboard.submit', compact('halaman', 'belum', 'no'));
+    }
+
+    public function submitPost(Request $request)
+    {
+        $id = $request->kegiatan;
+
+        $data = new \App\Achievement;
+        foreach($request->kegiatan as $id)
+        {
+            $data->id_activity  = $id;
+            $data->id_santri    = Auth::user()->id;
+            $data->status       = 'sukses';
+            $data->tanggal      = date('Y-m-d');
+            $data->save();
+        }
+        
+        return redirect('dashboard');
     }
 }
