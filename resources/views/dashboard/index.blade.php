@@ -7,28 +7,58 @@
 
 	{{-- CONTENT --}}
 	<div class="col-md-10">
-		@if (count($belum) > 0 && $listKegiatan == 1)
-		<div class="alert alert-warning" role="alert">
-			<h5 class="alertheading">Ayo, jangan tunda lagi!</h5>
-			<span>Hari ini kamu belum melakukan :</span> <br>
-			<ul>
-				@foreach ($belum as $list)
-				<li>{{$list->nama}}</li>
-				@endforeach
-			</ul>
-			<hr>
-			<span class="mb-0">Submit kegiatan yang sudah kamu lakukan disini <i class="fa fa-hand-o-right" aria-hidden="true"></i></span>&nbsp;
-			<a class="btn btn-secondary" href="{{url('activity/submit')}}">Submit</a>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="row" style="margin-bottom: 5px;">
+					<div class="col-auto mr-auto"><h5>Progress Hari Ini</h5></div>
+					<div class="col-auto">
+						<button class="btn btn-info btn-sm">Submit Kegiatan</button>
+					</div>
+				</div>
+				
+				<div class="progress" style="height:2em">
+					<div class="progress-bar bg-success" role="progressbar" style="width:{{count($sudah)/count($kegiatan)*100}}%" aria-valuenow="{{count($sudah)/count($kegiatan)*100}}" aria-valuemin="0" aria-valuemax="100">{{count($sudah)/count($kegiatan)*100}}%</div>
+				</div>
+
+				<ul class="list-group" style="margin-top: 10px; margin-bottom: 10px;">
+					@foreach ($sudah as $keg)
+					<li class="list-group-item list-group-item-success d-flex justify-content-between align-items-center">{{$keg->nama}}<span class="badge badge-success badge-pill"><i class="fa fa-check fa-lg" aria-hidden="true"></i></span></li>
+					@endforeach
+					@foreach ($belum as $keg)
+					<li class="list-group-item list-group-item-warning">{{$keg->nama}}</li>
+					@endforeach
+				</ul>
+			</div>
+			<div class="col-md-6">
+				<h5>Progress Bulan {{ $namaBulan }}</h5>
+				{!! $bulanan !!}
+				<small class="row">
+					<strong class="col-1">Keterangan</strong>
+					<div class="col">
+						<ul>
+							<li style="list-style: none;">
+								<i class="fa fa-square text-success"></i> : Melakukan semua kegiatan
+							</li>
+							<li style="list-style: none;">
+								<i class="fa fa-square text-info"></i> : Hari ini
+							</li>
+						</ul>
+					</div>
+					<div class="col">
+						<ul>
+							<li style="list-style: none;">
+								<i class="fa fa-square text-warning"></i> : Melakukan sebagian kegiatan
+							</li>
+							<li style="list-style: none;">
+								<i class="fa fa-square text-danger"></i> : Tidak melakukan kegiatan
+							</li>
+						</ul>
+					</div>
+				</small>
+			</div>
 		</div>
-		@elseif (count($belum) == 0 && $listKegiatan == 1)
-		<div class="alert alert-success">Sudah dilaksanakan ndan!</div>
-		@else
-		<div class="alert alert-warning">
-			<strong>Kamu belum memiliki kegiatan</strong>
-		</div>
-		<span class="mb-0">Untuk menambah kegiatan bisa klik <i class="fa fa-hand-o-right" aria-hidden="true"></i></span>&nbsp;
-			<a class="btn btn-secondary" href="{{url('activity')}}">Disini</a></span>
-		@endif
+		
+
 	</div>
 
 </div>

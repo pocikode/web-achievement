@@ -24,3 +24,6 @@ Route::resource('activity', 'ActivityController')->except(['create', 'show', 'ed
 Route::get('activity/submit', 'ActivityController@submit');
 Route::post('activity/submit', 'ActivityController@submitPost')->name('activity.submit');
 
+Route::get('tanggal', function () {
+	return date('Y-m-d');
+});

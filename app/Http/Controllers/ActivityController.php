@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use DB;
 
 class ActivityController extends Controller
 {
@@ -96,7 +97,9 @@ class ActivityController extends Controller
 
         foreach ($kegiatan as $keg) {
             $achiev = \App\Achievement::all();
-            $achiev = $achiev->where('id_activity', $keg->id)->where('id_santri', $id_santri)->where('tanggal', date('Y-m-d'));
+            $achiev = $achiev->where('id_activity', $keg->id)
+                             ->where('id_santri', $id_santri)
+                             ->where('tanggal', date('Y-m-d'));
 
             if ($achiev->isEmpty()) {
                 array_push($belum, $keg);
@@ -107,17 +110,54 @@ class ActivityController extends Controller
     }
 
     public function submitPost(Request $request)
-    {
-        $id = $request->kegiatan;
-
-        $data = new \App\Achievement;
+    {   
+        // Cek Jumlah Submit
+        $jmlSubmit  = count($request->kegiatan);
+        // Cek jumlah yang sudah disubmit
+        $achiev     = \App\Achievement::all();
+        $jmlSubmited= $achiev->where('id_santri', Auth::user()->id)->where('tanggal', date('Y-m-d'))->count();
+        // Cek jumlah activity
+        $activity   = \App\Activity::all();
+        $jmlAct     = $activity->where('id_santri', Auth::user()->id)->count();
+        
         foreach($request->kegiatan as $id)
         {
+            $data = new \App\Achievement;
             $data->id_activity  = $id;
             $data->id_santri    = Auth::user()->id;
             $data->status       = 'sukses';
             $data->tanggal      = date('Y-m-d');
             $data->save();
+        }
+
+        // Cek apakah ada data hari ini di table daily
+        $daily = DB::table('daily')->where('id_santri', Auth::user()->id)
+                                   ->where('tanggal', date('Y-m-d'))
+                                   ->count();
+        // Jika tidak ada data
+        if ($daily == 0) {
+            // Jika jumlah submit = jumlah activity
+            if ($jmlSubmit == $jmlAct) {
+                $status = 'sukses';
+            } else {
+                $status = 'sebagian';
+            }
+
+            // Buat data baru
+            DB::table('daily')->insert([
+                'id_santri' => Auth::user()->id,
+                'tanggal'   => date('Y-m-d'),
+                'status'    => $status
+            ]);
+        } 
+        // Jika sudah ada data
+        else {
+            // Cek apakah jumlah submit + jumlah activity yang sudah disubmit =  jumlah activity
+            if ($jmlSubmit+$jmlSubmited == $jmlAct) {
+                DB::table('daily')->where('id_santri', Auth::user()->id)
+                                  ->where('tanggal', date('Y-m-d'))
+                                  ->update(['status' => 'sukses']);
+            }
         }
         
         return redirect('dashboard');
