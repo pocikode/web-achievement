@@ -31,6 +31,6 @@ class CreateAchievementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('achievements');
+        // Schema::dropIfExists('achievements');
     }
 }

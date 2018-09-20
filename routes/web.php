@@ -17,13 +17,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::resource('dashboard', 'DashboardController')->only('index');
 Route::resource('activity', 'ActivityController')->except(['create', 'show', 'edit']);
-Route::get('activity/submit', 'ActivityController@submit');
 Route::post('activity/submit', 'ActivityController@submitPost')->name('activity.submit');
 
-Route::get('tanggal', function () {
-	return date('Y-m-d');
+Route::resource('partner', 'PartnerController')->except(['create','edit','show','destroy']);
+Route::get('partner/akses-true', 'PartnerController@aksesSubmitTrue');
+Route::get('partner/akses-false', 'PartnerController@aksesSubmitFalse');
+
+Route::resource('profile', 'ProfileController');
+Route::get('profile/siap', function () {
+	return 'siap';
 });

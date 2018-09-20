@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Session;
 use DB;
 use Auth;
 
@@ -55,10 +54,41 @@ class DashboardController extends Controller
         
         $namaBulan = $this->namaBulan();
         $bulanan   = $this->progressBulanan();
+        $cekKategori = $this->cekKategori();
+        
 
-        return view('dashboard.index', compact('kegiatan', 'sudah', 'belum', 'halaman', 'listKegiatan', 'namaBulan', 'bulanan'));
+        return view('dashboard.index', compact('kegiatan', 'sudah', 'belum', 'halaman', 'listKegiatan', 'namaBulan', 'bulanan', 'cekKategori'));
     }
 
+    // Cek apakah semua kategori sudah disisi
+    private function cekKategori()
+    {
+        $activity = \App\Activity::all();
+        // cek apa ada fikriyah
+        $fikriyah = $activity->where('id_santri', Auth::user()->id)->where('kategori', 3)->count();
+        // cek apa ada jasadiyah
+        $jasadiyah= $activity->where('id_santri', Auth::user()->id)->where('kategori', 2)->count();
+        // cek apa ada ruhiyah
+        $ruhiyah  = $activity->where('id_santri', Auth::user()->id)->where('kategori', 1)->count();
+
+        $notif = 'Anda belum ada kegiatan ';
+
+        if ($fikriyah>0 && $jasadiyah>0 && $ruhiyah>0) {
+            return 'ada';
+        } else {
+            if ($fikriyah == 0) {
+                $notif .= 'Fikriyah ';
+            }
+            if ($jasadiyah == 0) {
+                $notif .= 'Jasadiyah ';
+            }
+            if ($ruhiyah == 0) {
+                $notif .= 'Ruhiyah';
+            }
+
+            return $notif;
+        }
+    }
 
     // Menampilkan Progess Bulanan
     private function progressBulanan()

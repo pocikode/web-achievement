@@ -38,15 +38,18 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $data = new \App\Activity;
-        $data->id_santri    = Auth::user()->id;
-        $data->nama         = $request->nama;
-        $data->kategori     = $request->kategori;
-        $data->jumlah       = $request->jumlah;
-        $data->keterangan   = $request->keterangan;
-        $data->save();
+        if ($request->kategori == 0) {
+          return redirect('activity')->with('error','Pilih salah satu kategori!');
+        } else{
+          $data = new \App\Activity;
+          $data->id_santri    = Auth::user()->id;
+          $data->nama         = $request->nama;
+          $data->kategori     = $request->kategori;
+          $data->jumlah       = $request->jumlah;
+          $data->save();
 
-        return redirect('activity');
+          return redirect('activity');
+      }
     }
 
     /**
@@ -58,14 +61,18 @@ class ActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = \App\Activity::find($request->id);
-        $data->nama         = $request->nama;
-        $data->kategori     = $request->kategori;
-        $data->jumlah       = $request->jumlah;
-        $data->keterangan   = $request->keterangan;
-        $data->save();
+        if ($request->kategori == 0) {
+            return redirect('activity')->with('error','Pilih salah satu kategori!');
+        } else{ 
+            $data = \App\Activity::find($request->id);
+            $data->nama         = $request->nama;
+            $data->kategori     = $request->kategori;
+            $data->jumlah       = $request->jumlah;
+            $data->keterangan   = $request->keterangan;
+            $data->save();
 
-        return redirect('activity');
+            return redirect('activity');
+        }
     }
 
     /**

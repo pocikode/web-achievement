@@ -148,6 +148,11 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
+         * hak akses Entrust 
+         */
+        Zizaco\Entrust\EntrustServiceProvider::class,
+
+        /*
          * Package Service Providers...
          */
 
@@ -208,6 +213,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

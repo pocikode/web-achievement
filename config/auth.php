@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Santri::class,
+            'model' => \App\Santri::class,
         ],
 
         // 'users' => [

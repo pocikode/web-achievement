@@ -7,6 +7,10 @@
 
 	<div class="col-md-10">
 		@csrf
+
+		@if (session('error'))
+			<div class="alert alert-danger">{{session('error')}}</div>
+		@endif
 		<div class="row">
 			<div class="col-auto mr-auto">
 				<h2>Daftar Kegiatan</h2>
@@ -23,7 +27,6 @@
 					<th scope="col">Nama Kegiatan</th>
 					<th scope="col">Kategori</th>
 					<th scope="col">Jumlah</th>
-					<th scope="col">Keterangan</th>
 					<th scope="col" width="17%">Pilihan</th>
 				</tr>
 			</thead>
@@ -37,7 +40,6 @@
 					@endphp
 					<td>{{$kat}}</td>
 					<td>{{$data['jumlah']}}</td>
-					<td>{{$data['keterangan']}}</td>	
 					<td>
 						<button class="btn btn-success" data-toggle="modal" data-target="#updateKegiatan{{$data['id']}}">Update</button>
 						<button class="btn btn-warning" data-toggle="modal" data-target="#hapusKegiatan{{$data['id']}}">Delete</button>
@@ -65,21 +67,16 @@
 										<div class="form-group	col-2">
 											<label for="jumlah">Jumlah</label>
 											<input type="text" class="form-control" id="jumlah" name="jumlah" aria-describedby="jumlahHelp" value="{{$data['jumlah']}}">
-											<small id="jumlahHelp" class="form-text text-muted">5</small>
+											<small id="jumlahHelp" class="form-text text-muted">5hal</small>
 										</div>
 										<div class="form-group col-12">
 											<label for="kategori">Kategori</label>
 											<select name="kategori" id="kategori" class="form-control">
-												<option> ----- Pilih Kategori ----- </option>
+												<option value="0"> ----- Pilih Kategori ----- </option>
 												@foreach ($kategori as $kat)
 												<option value="{{$kat['id']}}" >{{$kat['nama']}}</option>
 												@endforeach
 											</select>
-										</div>
-										<div class="form-group col-12">
-											<label for="keterangan">Keterangan</label>
-											<textarea name="keterangan" id="keterangan" class="form-control" aria-describedby="keteranganHelp">{{$data['keterangan']}}</textarea>
-											<small id="keteranganHelp" class="form-text text-muted">*) Contoh : Ayat 1-5 Surat Ar-Rahman</small>
 										</div>
 									</div>
 									<input type="hidden" name="id" value="{{$data['id']}}">
@@ -138,27 +135,22 @@
 					<div class="form-row">
 						<div class="form-group col-md-10">
 							<label for="nama">Nama Kegiatan</label>
-							<input type="text" class="form-control" id="nama" name="nama" aria-describedby="namaHelp">
+							<input type="text" class="form-control" id="nama" name="nama" aria-describedby="namaHelp" required>
 							<small id="namaHelp" class="form-text text-muted">*) Contoh : Hafalan Al-Qur'an</small>
 						</div>
 						<div class="form-group	col-2">
 							<label for="jumlah">Jumlah</label>
-							<input type="text" class="form-control" id="jumlah" name="jumlah" aria-describedby="jumlahHelp">
-							<small id="jumlahHelp" class="form-text text-muted">5</small>
+							<input type="text" class="form-control" id="jumlah" name="jumlah" aria-describedby="jumlahHelp" required>
+							<small id="jumlahHelp" class="form-text text-muted">5hal</small>
 						</div>
 						<div class="form-group col-12">
 							<label for="kategori">Kategori</label>
 							<select name="kategori" id="kategori" class="form-control">
-								<option> ----- Pilih Kategori ----- </option>
+								<option value="0"> ----- Pilih Kategori ----- </option>
 								@foreach ($kategori as $kat)
 								<option value="{{$kat['id']}}">{{$kat['nama']}}</option>
 								@endforeach
 							</select>
-						</div>
-						<div class="form-group col-12">
-							<label for="keterangan">Keterangan</label>
-							<textarea name="keterangan" id="keterangan" class="form-control" aria-describedby="keteranganHelp"></textarea>
-							<small id="keteranganHelp" class="form-text text-muted">*) Contoh : Ayat 1-5 Surat Ar-Rahman</small>
 						</div>
 					</div>
 			</div>
